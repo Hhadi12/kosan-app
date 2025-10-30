@@ -32,3 +32,9 @@ Thumbs.db
 node_modules/
 dist/
 build/
+
+# UML Diagrams - DO NOT COMMIT
+UML/
+*.puml.png
+*.puml.svg
+*.puml~
