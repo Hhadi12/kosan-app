@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { login as loginApi, logout as logoutApi, getCurrentUser } from '../api/authApi';
+import authApi from '../api/authApi';
 
 const AuthContext = createContext(null);
 
@@ -20,10 +20,10 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // Login function
-  const login = async (credentials) => {
+  // Login function - accepts email and password
+  const login = async (email, password) => {
     try {
-      const data = await loginApi(credentials);
+      const data = await authApi.login({ email, password });
       
       // Save to state
       setToken(data.token);
@@ -35,17 +35,14 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true, data };
     } catch (error) {
-      return {
-        success: false,
-        error: error.response?.data || { message: 'Login failed' },
-      };
+      throw error;
     }
   };
 
   // Logout function
   const logout = async () => {
     try {
-      await logoutApi();
+      await authApi.logout();
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
