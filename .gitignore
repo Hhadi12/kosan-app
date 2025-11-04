@@ -38,3 +38,6 @@ UML/
 *.puml.png
 *.puml.svg
 *.puml~
+
+# Claude Code configuration
+.claude/
