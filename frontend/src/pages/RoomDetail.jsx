@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import Navbar from '../components/Navbar';
 import StatusBadge from '../components/StatusBadge';
 import { getRoomById, deleteRoom } from '../api/roomApi';
+import { getTenantByRoom } from '../api/tenantApi';
 import { useAuth } from '../contexts/AuthContext';
 import { formatPrice, formatDate } from '../utils/formatters';
 import {
@@ -14,6 +15,8 @@ import {
   ERROR_MESSAGES,
   SUCCESS_MESSAGES,
   LOADING_MESSAGES,
+  TENANT_EMPTY_MESSAGES,
+  TENANT_BUTTON_LABELS,
 } from '../utils/constants';
 
 /**
@@ -29,7 +32,9 @@ const RoomDetail = () => {
 
   // State management
   const [room, setRoom] = useState(null);
+  const [tenant, setTenant] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingTenant, setLoadingTenant] = useState(false);
   const [error, setError] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -42,11 +47,31 @@ const RoomDetail = () => {
     try {
       const data = await getRoomById(id);
       setRoom(data);
+
+      // If room is occupied, fetch tenant info
+      if (data.status === 'occupied') {
+        fetchTenant();
+      }
     } catch (err) {
       console.error('Error fetching room:', err);
       setError(ERROR_MESSAGES.roomNotFound);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Fetch tenant data if room is occupied
+  const fetchTenant = async () => {
+    setLoadingTenant(true);
+    try {
+      const data = await getTenantByRoom(id);
+      setTenant(data.tenant || null);
+    } catch (err) {
+      console.error('Error fetching tenant:', err);
+      // It's okay if tenant fetch fails, just don't show tenant section
+      setTenant(null);
+    } finally {
+      setLoadingTenant(false);
     }
   };
 
@@ -197,6 +222,116 @@ const RoomDetail = () => {
             </div>
           </div>
         </div>
+
+        {/* Current Tenant Card - Only show if room is occupied */}
+        {room.status === 'occupied' && (
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6 border border-gray-200">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Penghuni Saat Ini</h2>
+
+            {loadingTenant ? (
+              <div className="text-center py-4">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p className="mt-2 text-gray-600">Memuat data penghuni...</p>
+              </div>
+            ) : tenant ? (
+              <div>
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {tenant.user_full_name || tenant.user_username}
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-1">{tenant.user_email}</p>
+                    {tenant.occupation && (
+                      <p className="text-sm text-gray-600 mt-1">
+                        <span className="font-medium">Pekerjaan:</span> {tenant.occupation}
+                      </p>
+                    )}
+                  </div>
+                  {tenant.is_active && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
+                      Aktif
+                    </span>
+                  )}
+                </div>
+
+                {/* Assignment Details */}
+                {tenant.current_assignment && (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-200">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">
+                        Tanggal Masuk
+                      </label>
+                      <p className="text-sm font-semibold text-gray-900">
+                        {formatDate(tenant.current_assignment.move_in_date)}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">
+                        Sewa Bulanan
+                      </label>
+                      <p className="text-sm font-semibold text-gray-900">
+                        Rp {Number(tenant.current_assignment.monthly_rent).toLocaleString('id-ID')}
+                      </p>
+                    </div>
+                    {tenant.current_assignment.lease_end_date && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                          Akhir Masa Sewa
+                        </label>
+                        <p className="text-sm font-semibold text-gray-900">
+                          {formatDate(tenant.current_assignment.lease_end_date)}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* View Profile Button */}
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <Link
+                    to={`/penghuni/${tenant.id}`}
+                    className="inline-flex items-center px-4 py-2 border border-blue-600 rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                  >
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    {TENANT_BUTTON_LABELS.viewProfile}
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <svg
+                  className="mx-auto h-12 w-12 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+                <p className="mt-4 text-gray-600">{TENANT_EMPTY_MESSAGES.noTenantInRoom}</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Data penghuni tidak ditemukan untuk kamar ini
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Facilities Card */}
         {room.facilities && (

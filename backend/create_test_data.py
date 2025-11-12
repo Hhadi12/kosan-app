@@ -1,10 +1,11 @@
 """
 Test Data Setup Script
-Creates test users and rooms for Phase 4.5 testing
+Creates test users, rooms, and tenant assignments for Phase 5.1 testing
 """
 
 import os
 import django
+from datetime import date, timedelta
 
 # Setup Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kosan_project.settings')
@@ -12,6 +13,7 @@ django.setup()
 
 from users.models import User
 from rooms.models import Room
+from tenants.models import TenantProfile, RoomAssignment
 
 def create_test_users():
     """Create 5 test users (1 admin + 4 regular users)"""
@@ -142,6 +144,95 @@ def create_test_rooms():
     print(f"Double: {Room.objects.filter(room_type='double').count()}")
     print(f"Shared: {Room.objects.filter(room_type='shared').count()}")
 
+def create_tenant_assignments():
+    """Create sample tenant assignments for testing"""
+
+    print("\nCreating tenant assignments...")
+
+    # Get tenants and rooms
+    try:
+        budi_profile = TenantProfile.objects.get(user__email='budi@test.com')
+        siti_profile = TenantProfile.objects.get(user__email='siti@test.com')
+        andi_profile = TenantProfile.objects.get(user__email='andi@test.com')
+    except TenantProfile.DoesNotExist:
+        print("[ERROR] Tenant profiles not found. Please run create_tenant_profiles command first.")
+        return
+
+    # Assignment data
+    assignments_data = [
+        {
+            'tenant_email': 'budi@test.com',
+            'room_number': 'A102',
+            'move_in_date': date.today() - timedelta(days=180),  # 6 months ago
+            'lease_end_date': date.today() + timedelta(days=185),  # 6 months from now
+            'monthly_rent': 1000000,
+            'description': 'Long-term tenant'
+        },
+        {
+            'tenant_email': 'siti@test.com',
+            'room_number': 'A105',
+            'move_in_date': date.today() - timedelta(days=90),  # 3 months ago
+            'lease_end_date': date.today() + timedelta(days=275),  # 9 months from now
+            'monthly_rent': 1500000,
+            'description': 'New tenant'
+        },
+        {
+            'tenant_email': 'andi@test.com',
+            'room_number': 'B205',
+            'move_in_date': date.today() - timedelta(days=365),  # 1 year ago
+            'lease_end_date': date.today() + timedelta(days=365),  # 1 year from now
+            'monthly_rent': 1800000,
+            'description': 'Renewed lease'
+        },
+    ]
+
+    created_count = 0
+    for assignment_data in assignments_data:
+        # Get tenant and room
+        try:
+            tenant = TenantProfile.objects.get(user__email=assignment_data['tenant_email'])
+            room = Room.objects.get(room_number=assignment_data['room_number'])
+
+            # Check if assignment already exists
+            existing = RoomAssignment.objects.filter(
+                tenant=tenant,
+                room=room,
+                is_current=True
+            ).first()
+
+            if not existing:
+                assignment = RoomAssignment.objects.create(
+                    tenant=tenant,
+                    room=room,
+                    move_in_date=assignment_data['move_in_date'],
+                    lease_end_date=assignment_data['lease_end_date'],
+                    monthly_rent=assignment_data['monthly_rent'],
+                    is_current=True
+                )
+
+                # Update room status to occupied
+                room.status = 'occupied'
+                room.save()
+
+                created_count += 1
+                print(f"[OK] Assigned {tenant.user.get_full_name()} to room {room.room_number}")
+            else:
+                print(f"[OK] Assignment already exists: {tenant.user.get_full_name()} in {room.room_number}")
+
+        except (TenantProfile.DoesNotExist, Room.DoesNotExist) as e:
+            print(f"[ERROR] {e}")
+            continue
+
+    print(f"\nCreated {created_count} new assignments")
+    print(f"Total active assignments: {RoomAssignment.objects.filter(is_current=True).count()}")
+
+    # Show assignment statistics
+    print("\n=== Assignment Statistics ===")
+    print(f"Active assignments: {RoomAssignment.objects.filter(is_current=True).count()}")
+    print(f"Past assignments: {RoomAssignment.objects.filter(is_current=False).count()}")
+    print(f"Tenants with rooms: {TenantProfile.objects.filter(assignments__is_current=True).distinct().count()}")
+    print(f"Tenants without rooms: {TenantProfile.objects.exclude(assignments__is_current=True).distinct().count()}")
+
 if __name__ == '__main__':
     print("=" * 50)
     print("KOSAN APP - TEST DATA SETUP")
@@ -149,13 +240,19 @@ if __name__ == '__main__':
 
     create_test_users()
     create_test_rooms()
+    create_tenant_assignments()
 
     print("\n" + "=" * 50)
     print("TEST DATA SETUP COMPLETE!")
     print("=" * 50)
     print("\nYou can now test the application with:")
-    print("- Admin: admin@test.com / admin123")
-    print("- Tenants: budi@test.com / budi123")
-    print("           siti@test.com / siti123")
-    print("           andi@test.com / andi123")
-    print("           dewi@test.com / dewi123")
+    print("\n** Admin Account **")
+    print("- Email: admin@test.com")
+    print("- Password: admin123")
+    print("\n** Tenant Accounts (with room assignments) **")
+    print("- Budi (Room A102): budi@test.com / budi123")
+    print("- Siti (Room A105): siti@test.com / siti123")
+    print("- Andi (Room B205): andi@test.com / andi123")
+    print("\n** Tenant Accounts (no room yet) **")
+    print("- Dewi (No room): dewi@test.com / dewi123")
+    print("\nNote: Run 'python manage.py create_tenant_profiles' if tenant profiles don't exist.")

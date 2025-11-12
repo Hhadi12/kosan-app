@@ -10,6 +10,9 @@ import RoomList from './pages/RoomList';
 import RoomDetail from './pages/RoomDetail';
 import CreateRoom from './pages/CreateRoom';
 import EditRoom from './pages/EditRoom';
+import TenantList from './pages/TenantList';
+import TenantDetail from './pages/TenantDetail';
+import EditTenant from './pages/EditTenant';
 
 function App() {
   return (
@@ -49,6 +52,11 @@ function App() {
         {/* IMPORTANT: /rooms/create MUST come before /rooms/:id to avoid "create" being treated as an ID */}
         <Route path="/rooms/create" element={<AdminRoute><CreateRoom /></AdminRoute>} />
         <Route path="/rooms/:id/edit" element={<AdminRoute><EditRoom /></AdminRoute>} />
+
+        {/* Tenant Routes - Admin Only */}
+        <Route path="/penghuni" element={<AdminRoute><TenantList /></AdminRoute>} />
+        <Route path="/penghuni/:id" element={<ProtectedRoute><TenantDetail /></ProtectedRoute>} />
+        <Route path="/penghuni/:id/edit" element={<AdminRoute><EditTenant /></AdminRoute>} />
 
         {/* Default Route */}
         <Route path="/" element={<Navigate to="/login" replace />} />

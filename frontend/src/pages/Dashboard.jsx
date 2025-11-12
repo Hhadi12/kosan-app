@@ -2,35 +2,60 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { getAllRooms } from '../api/roomApi';
+import { getAllTenants, getMyProfile } from '../api/tenantApi';
 import Navbar from '../components/Navbar';
 import RoomCard from '../components/RoomCard';
 import { getFavorites } from '../utils/favoritesUtils';
+import { formatDate } from '../utils/formatters';
 
 function Dashboard() {
   const { user, isAdmin } = useAuth();
   const [roomCount, setRoomCount] = useState(0);
+  const [tenantCount, setTenantCount] = useState(0);
+  const [myTenantProfile, setMyTenantProfile] = useState(null);
   const [favoriteRooms, setFavoriteRooms] = useState([]);
   const [loadingFavorites, setLoadingFavorites] = useState(false);
+  const [loadingTenant, setLoadingTenant] = useState(false);
 
-  // Fetch room count on mount
+  // Fetch counts on mount
   useEffect(() => {
-    const fetchRoomCount = async () => {
+    const fetchCounts = async () => {
       try {
-        const data = await getAllRooms();
-        setRoomCount(data.count);
+        // Fetch room count
+        const roomData = await getAllRooms();
+        setRoomCount(roomData.count);
+
+        // Fetch tenant count (admin only)
+        if (isAdmin()) {
+          const tenantData = await getAllTenants();
+          setTenantCount(tenantData.count || 0);
+        }
       } catch (err) {
-        console.error('Error fetching room count:', err);
+        console.error('Error fetching counts:', err);
       }
     };
 
-    fetchRoomCount();
-  }, []);
+    fetchCounts();
+  }, [isAdmin]);
 
-  // Fetch favorite rooms for tenants
+  // Fetch tenant profile and favorites for regular users
   useEffect(() => {
-    const fetchFavoriteRooms = async () => {
+    const fetchTenantData = async () => {
       if (isAdmin()) return; // Skip for admins
 
+      // Fetch tenant profile
+      setLoadingTenant(true);
+      try {
+        const profile = await getMyProfile();
+        setMyTenantProfile(profile);
+      } catch (err) {
+        console.error('Error fetching tenant profile:', err);
+        // Profile might not exist yet, that's okay
+      } finally {
+        setLoadingTenant(false);
+      }
+
+      // Fetch favorite rooms
       const favoriteIds = getFavorites();
       if (favoriteIds.length === 0) {
         setFavoriteRooms([]);
@@ -40,7 +65,7 @@ function Dashboard() {
       setLoadingFavorites(true);
       try {
         const data = await getAllRooms();
-        const favorites = data.rooms.filter(room => favoriteIds.includes(room.id));
+        const favorites = data.rooms.filter((room) => favoriteIds.includes(room.id));
         setFavoriteRooms(favorites);
       } catch (err) {
         console.error('Error fetching favorite rooms:', err);
@@ -49,7 +74,7 @@ function Dashboard() {
       }
     };
 
-    fetchFavoriteRooms();
+    fetchTenantData();
   }, [isAdmin]);
 
   return (
@@ -94,21 +119,68 @@ function Dashboard() {
             </p>
           </Link>
 
-          {/* Card 2 */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-sm">Total Penghuni</p>
-                <p className="text-3xl font-bold text-gray-800 mt-1">-</p>
+          {/* Card 2 - Total Penghuni (Admin only) */}
+          {isAdmin() ? (
+            <Link
+              to="/penghuni"
+              className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200 cursor-pointer block"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-500 text-sm">Total Penghuni</p>
+                  <p className="text-3xl font-bold text-gray-800 mt-1">{tenantCount}</p>
+                </div>
+                <div className="bg-green-100 p-3 rounded-full">
+                  <svg
+                    className="w-8 h-8 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                </div>
               </div>
-              <div className="bg-green-100 p-3 rounded-full">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              <p className="text-green-600 text-sm mt-2 flex items-center">
+                Lihat semua penghuni
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
+              </p>
+            </Link>
+          ) : (
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-500 text-sm">Status</p>
+                  <p className="text-xl font-bold text-gray-800 mt-1">
+                    {myTenantProfile?.is_active ? 'Aktif' : 'Tidak Aktif'}
+                  </p>
+                </div>
+                <div className="bg-green-100 p-3 rounded-full">
+                  <svg
+                    className="w-8 h-8 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
               </div>
+              <p className="text-gray-500 text-sm mt-2">Status keanggotaan</p>
             </div>
-            <p className="text-green-600 text-sm mt-2">Coming soon</p>
-          </div>
+          )}
 
           {/* Card 3 */}
           <div className="bg-white rounded-lg shadow-lg p-6">
@@ -126,6 +198,90 @@ function Dashboard() {
             <p className="text-green-600 text-sm mt-2">Coming soon</p>
           </div>
         </div>
+
+        {/* Tenant Profile Section - Tenants Only */}
+        {!isAdmin() && myTenantProfile && (
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-800">Profil Saya</h3>
+              {myTenantProfile.id && (
+                <Link
+                  to={`/penghuni/${myTenantProfile.id}`}
+                  className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                >
+                  Lihat Detail →
+                </Link>
+              )}
+            </div>
+
+            {loadingTenant ? (
+              <div className="text-center py-8">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p className="mt-2 text-gray-600">Memuat...</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Current Room Assignment */}
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
+                  <h4 className="text-sm font-medium text-blue-900 mb-3">Kamar Saat Ini</h4>
+                  {myTenantProfile.current_assignment ? (
+                    <div>
+                      <Link
+                        to={`/rooms/${myTenantProfile.current_assignment.room}`}
+                        className="text-2xl font-bold text-blue-700 hover:text-blue-800 block"
+                      >
+                        Kamar {myTenantProfile.current_assignment.room_number}
+                      </Link>
+                      <p className="text-sm text-blue-600 mt-2">
+                        Masuk: {formatDate(myTenantProfile.current_assignment.move_in_date)}
+                      </p>
+                      <p className="text-sm text-blue-600">
+                        Sewa: Rp{' '}
+                        {Number(myTenantProfile.current_assignment.monthly_rent).toLocaleString('id-ID')}/bulan
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="text-blue-600">
+                      <p>Belum ada kamar</p>
+                      <Link to="/rooms" className="text-sm hover:underline mt-2 inline-block">
+                        Lihat kamar tersedia
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* Tenant Info */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Informasi Pribadi</h4>
+                  <dl className="space-y-2">
+                    {myTenantProfile.occupation && (
+                      <div className="flex justify-between">
+                        <dt className="text-sm text-gray-500">Pekerjaan:</dt>
+                        <dd className="text-sm font-medium text-gray-900">{myTenantProfile.occupation}</dd>
+                      </div>
+                    )}
+                    {myTenantProfile.emergency_contact_name && (
+                      <div className="flex justify-between">
+                        <dt className="text-sm text-gray-500">Kontak Darurat:</dt>
+                        <dd className="text-sm font-medium text-gray-900">
+                          {myTenantProfile.emergency_contact_name}
+                        </dd>
+                      </div>
+                    )}
+                    {myTenantProfile.emergency_contact_phone && (
+                      <div className="flex justify-between">
+                        <dt className="text-sm text-gray-500">Telepon Darurat:</dt>
+                        <dd className="text-sm font-medium text-gray-900">
+                          {myTenantProfile.emergency_contact_phone}
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Favorite Rooms Section - Tenants Only */}
         {!isAdmin() && (
@@ -147,15 +303,25 @@ function Dashboard() {
               </div>
             ) : favoriteRooms.length === 0 ? (
               <div className="text-center py-8">
-                <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <svg
+                  className="w-16 h-16 text-gray-300 mx-auto mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
                 </svg>
                 <p className="text-gray-600 mb-2">Belum ada kamar favorit</p>
                 <p className="text-sm text-gray-500">Klik ikon hati pada kamar untuk menambahkan favorit</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {favoriteRooms.map(room => (
+                {favoriteRooms.map((room) => (
                   <RoomCard key={room.id} room={room} />
                 ))}
               </div>
