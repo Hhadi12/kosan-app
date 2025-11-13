@@ -129,3 +129,9 @@ export const capitalize = (str) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
 };
+
+/**
+ * Alias for formatPrice for consistency with payment system
+ * @alias formatPrice
+ */
+export const formatRupiah = formatPrice;

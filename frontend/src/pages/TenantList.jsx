@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAllTenants } from '../api/tenantApi';
 import { useAuth } from '../contexts/AuthContext';
+import Navbar from '../components/Navbar';
 import TenantCard from '../components/TenantCard';
 import {
   TENANT_PAGE_TITLES,
@@ -126,7 +127,9 @@ const TenantList = () => {
   // Loading skeleton
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="container mx-auto px-4 py-8">
         <div className="animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -140,17 +143,21 @@ const TenantList = () => {
             ))}
           </div>
         </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">{TENANT_PAGE_TITLES.tenantList}</h1>
-        <p className="mt-2 text-gray-600">Kelola data penghuni kosan</p>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">{TENANT_PAGE_TITLES.tenantList}</h1>
+          <p className="mt-2 text-gray-600">Kelola data penghuni kosan</p>
+        </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
@@ -453,6 +460,7 @@ const TenantList = () => {
           )}
         </>
       )}
+      </div>
     </div>
   );
 };

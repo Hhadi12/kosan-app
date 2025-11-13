@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'users',
     'rooms',
     'tenants',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +133,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Media files (User-uploaded content)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -151,8 +156,11 @@ REST_FRAMEWORK = {
 }
 
 # CORS Settings
+# Allow multiple development ports for Vite dev server
 CORS_ALLOWED_ORIGINS = [
-    config('CORS_ORIGIN'),
+    'http://localhost:5173',  # Default Vite port
+    'http://localhost:5174',  # Alternate port 1
+    'http://localhost:5175',  # Alternate port 2
 ]
 
 CORS_ALLOW_CREDENTIALS = True

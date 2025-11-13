@@ -337,3 +337,268 @@ export const TENANT_STATS_LABELS = {
   assignedTenants: 'Memiliki Kamar',
   unassignedTenants: 'Belum Ada Kamar',
 };
+
+// ============================================================================
+// PAYMENT MANAGEMENT CONSTANTS
+// ============================================================================
+
+/**
+ * Payment Status Configuration
+ * Includes label, color scheme for badges
+ */
+export const PAYMENT_STATUS = {
+  paid: {
+    label: 'Lunas',
+    color: 'green',
+    bgColor: 'bg-green-100',
+    textColor: 'text-green-800',
+    borderColor: 'border-green-200',
+  },
+  pending: {
+    label: 'Tertunda',
+    color: 'yellow',
+    bgColor: 'bg-yellow-100',
+    textColor: 'text-yellow-800',
+    borderColor: 'border-yellow-200',
+  },
+  overdue: {
+    label: 'Terlambat',
+    color: 'red',
+    bgColor: 'bg-red-100',
+    textColor: 'text-red-800',
+    borderColor: 'border-red-200',
+  },
+  cancelled: {
+    label: 'Dibatalkan',
+    color: 'gray',
+    bgColor: 'bg-gray-100',
+    textColor: 'text-gray-800',
+    borderColor: 'border-gray-200',
+  },
+};
+
+/**
+ * Payment Status Options for Dropdowns
+ */
+export const PAYMENT_STATUS_OPTIONS = [
+  { value: '', label: 'Semua Status' },
+  { value: 'paid', label: 'Lunas' },
+  { value: 'pending', label: 'Tertunda' },
+  { value: 'overdue', label: 'Terlambat' },
+  { value: 'cancelled', label: 'Dibatalkan' },
+];
+
+/**
+ * Payment Method Labels (Indonesian)
+ */
+export const PAYMENT_METHODS = {
+  cash: 'Tunai',
+  transfer: 'Transfer Bank',
+  other: 'Lainnya',
+};
+
+/**
+ * Payment Method Options for Dropdowns
+ */
+export const PAYMENT_METHOD_OPTIONS = [
+  { value: 'cash', label: 'Tunai' },
+  { value: 'transfer', label: 'Transfer Bank' },
+  { value: 'other', label: 'Lainnya' },
+];
+
+/**
+ * Month Names (Indonesian)
+ */
+export const MONTH_NAMES = [
+  'Januari',
+  'Februari',
+  'Maret',
+  'April',
+  'Mei',
+  'Juni',
+  'Juli',
+  'Agustus',
+  'September',
+  'Oktober',
+  'November',
+  'Desember',
+];
+
+/**
+ * Month Options for Dropdowns
+ */
+export const MONTH_OPTIONS = [
+  { value: '', label: 'Semua Bulan' },
+  { value: 1, label: 'Januari' },
+  { value: 2, label: 'Februari' },
+  { value: 3, label: 'Maret' },
+  { value: 4, label: 'April' },
+  { value: 5, label: 'Mei' },
+  { value: 6, label: 'Juni' },
+  { value: 7, label: 'Juli' },
+  { value: 8, label: 'Agustus' },
+  { value: 9, label: 'September' },
+  { value: 10, label: 'Oktober' },
+  { value: 11, label: 'November' },
+  { value: 12, label: 'Desember' },
+];
+
+/**
+ * Payment Page Titles (Indonesian)
+ */
+export const PAYMENT_PAGE_TITLES = {
+  paymentList: 'Daftar Pembayaran',
+  paymentDetail: 'Detail Pembayaran',
+  createPayment: 'Buat Pembayaran Baru',
+  myPayments: 'Pembayaran Saya',
+};
+
+/**
+ * Payment Form Field Labels (Indonesian)
+ */
+export const PAYMENT_FORM_LABELS = {
+  tenant: 'Penghuni',
+  room: 'Kamar',
+  period: 'Periode',
+  payment_period_month: 'Bulan',
+  payment_period_year: 'Tahun',
+  amount: 'Jumlah',
+  due_date: 'Jatuh Tempo',
+  payment_date: 'Tanggal Bayar',
+  status: 'Status',
+  payment_method: 'Metode Pembayaran',
+  payment_reference: 'Nomor Referensi',
+  bank_name: 'Nama Bank',
+  bank_account_name: 'Nama Pemilik Rekening',
+  bank_account_number: 'Nomor Rekening',
+  notes: 'Catatan',
+  proof_of_payment: 'Bukti Pembayaran',
+};
+
+/**
+ * Payment Button Labels (Indonesian)
+ */
+export const PAYMENT_BUTTON_LABELS = {
+  createPayment: 'Buat Pembayaran',
+  markAsPaid: 'Tandai Lunas',
+  uploadProof: 'Unggah Bukti',
+  downloadReceipt: 'Unduh Kwitansi',
+  exportCSV: 'Ekspor CSV',
+  exportPDF: 'Ekspor PDF',
+  generateMonthly: 'Generate Tagihan Bulanan',
+  viewPayments: 'Lihat Pembayaran',
+  payNow: 'Bayar Sekarang',
+};
+
+/**
+ * Payment Success Messages (Indonesian)
+ */
+export const PAYMENT_SUCCESS_MESSAGES = {
+  paymentCreated: 'Pembayaran berhasil dibuat',
+  paymentUpdated: 'Pembayaran berhasil diperbarui',
+  paymentDeleted: 'Pembayaran berhasil dihapus',
+  markedAsPaid: 'Pembayaran berhasil ditandai lunas',
+  proofUploaded: 'Bukti pembayaran berhasil diunggah',
+  receiptDownloaded: 'Kwitansi berhasil diunduh',
+  paymentsExported: 'Data pembayaran berhasil diekspor',
+  monthlyGenerated: 'Tagihan bulanan berhasil dibuat',
+};
+
+/**
+ * Payment Error Messages (Indonesian)
+ */
+export const PAYMENT_ERROR_MESSAGES = {
+  fetchPayments: 'Gagal memuat data pembayaran',
+  fetchPayment: 'Gagal memuat detail pembayaran',
+  createPayment: 'Gagal membuat pembayaran',
+  updatePayment: 'Gagal memperbarui pembayaran',
+  deletePayment: 'Gagal menghapus pembayaran',
+  markPaidFailed: 'Gagal menandai pembayaran lunas',
+  uploadFailed: 'Gagal mengunggah bukti pembayaran',
+  downloadFailed: 'Gagal mengunduh kwitansi',
+  exportFailed: 'Gagal mengekspor data',
+  generateFailed: 'Gagal membuat tagihan bulanan',
+  paymentNotFound: 'Pembayaran tidak ditemukan',
+  duplicatePeriod: 'Pembayaran untuk periode ini sudah ada',
+  cannotDeletePaid: 'Tidak dapat menghapus pembayaran yang sudah lunas',
+  fileTooLarge: 'Ukuran file maksimal 5MB',
+  invalidFileType: 'Format file harus JPG, PNG, atau PDF',
+};
+
+/**
+ * Payment Empty State Messages (Indonesian)
+ */
+export const PAYMENT_EMPTY_MESSAGES = {
+  noPayments: 'Tidak ada pembayaran ditemukan',
+  noPaymentsFilter: 'Tidak ada pembayaran yang sesuai dengan filter',
+  noPendingPayments: 'Semua pembayaran sudah lunas',
+  noOverduePayments: 'Tidak ada pembayaran yang terlambat',
+  noProofUploaded: 'Belum ada bukti pembayaran',
+};
+
+/**
+ * Payment Loading Messages (Indonesian)
+ */
+export const PAYMENT_LOADING_MESSAGES = {
+  loadingPayments: 'Memuat data pembayaran...',
+  loadingStats: 'Memuat statistik...',
+  creatingPayment: 'Membuat pembayaran...',
+  markingPaid: 'Menandai lunas...',
+  uploadingProof: 'Mengunggah bukti...',
+  downloadingReceipt: 'Mengunduh kwitansi...',
+  exporting: 'Mengekspor data...',
+  generating: 'Membuat tagihan...',
+};
+
+/**
+ * Payment Confirmation Messages (Indonesian)
+ */
+export const PAYMENT_CONFIRM_MESSAGES = {
+  deletePayment: (period) => `Apakah Anda yakin ingin menghapus pembayaran ${period}?`,
+  markAsPaid: (tenant, amount) =>
+    `Tandai pembayaran dari ${tenant} sebesar ${amount} sebagai lunas?`,
+  generateMonthly: (month, year) =>
+    `Generate tagihan untuk semua penghuni aktif untuk periode ${month} ${year}?`,
+  deleteWarning: 'Tindakan ini tidak dapat dibatalkan',
+  alreadyPaid: 'Pembayaran ini sudah lunas',
+};
+
+/**
+ * Payment Info Messages (Indonesian)
+ */
+export const PAYMENT_INFO_MESSAGES = {
+  dueToday: 'Jatuh tempo hari ini',
+  overdue: (days) => `Terlambat ${days} hari`,
+  paidEarly: 'Dibayar lebih awal',
+  paidOnTime: 'Dibayar tepat waktu',
+  paidLate: (days) => `Dibayar terlambat ${days} hari`,
+  uploadProofHint: 'Unggah bukti transfer (JPG, PNG, atau PDF, maks 5MB)',
+  bankInfo: 'Informasi rekening untuk transfer',
+  selectTenantFirst: 'Pilih penghuni terlebih dahulu',
+  amountAutoFilled: 'Jumlah otomatis terisi dari harga sewa kamar',
+};
+
+/**
+ * Payment Stats Labels (Indonesian)
+ */
+export const PAYMENT_STATS_LABELS = {
+  totalPayments: 'Total Pembayaran',
+  paidPayments: 'Lunas',
+  pendingPayments: 'Tertunda',
+  overduePayments: 'Terlambat',
+  totalAmount: 'Total Jumlah',
+  paidAmount: 'Sudah Dibayar',
+  pendingAmount: 'Belum Dibayar',
+  thisMonthRevenue: 'Pendapatan Bulan Ini',
+  totalRevenue: 'Total Pendapatan',
+  outstandingAmount: 'Total Tunggakan',
+};
+
+/**
+ * Bank Account Information (Feature G)
+ */
+export const BANK_ACCOUNT = {
+  bank_name: 'Bank BCA',
+  account_name: 'Rahman Hadi',
+  account_number: '1234567890',
+};

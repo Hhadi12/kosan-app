@@ -14,6 +14,7 @@ django.setup()
 from users.models import User
 from rooms.models import Room
 from tenants.models import TenantProfile, RoomAssignment
+from payments.models import Payment
 
 def create_test_users():
     """Create 5 test users (1 admin + 4 regular users)"""
@@ -233,6 +234,102 @@ def create_tenant_assignments():
     print(f"Tenants with rooms: {TenantProfile.objects.filter(assignments__is_current=True).distinct().count()}")
     print(f"Tenants without rooms: {TenantProfile.objects.exclude(assignments__is_current=True).distinct().count()}")
 
+
+def create_test_payments():
+    """Create sample payments for Phase 6 testing"""
+
+    print("\n=== Creating Test Payments ===")
+
+    from decimal import Decimal
+
+    # Get admin user
+    admin = User.objects.filter(role='admin').first()
+    if not admin:
+        print("[ERROR] Admin user not found. Cannot create test payments.")
+        return
+
+    # Get active assignments
+    active_assignments = RoomAssignment.objects.filter(is_current=True)
+    if not active_assignments.exists():
+        print("[ERROR] No active assignments found. Cannot create test payments.")
+        return
+
+    created_count = 0
+    skipped_count = 0
+
+    # Create payments for June - December 2025 to populate chart
+    months_data = [
+        (6, 2025, date(2025, 6, 5), 3),  # June - all paid
+        (7, 2025, date(2025, 7, 5), 3),  # July - all paid
+        (8, 2025, date(2025, 8, 5), 2),  # August - 2 paid, 1 pending
+        (9, 2025, date(2025, 9, 5), 2),  # September - 2 paid, 1 pending
+        (10, 2025, date(2025, 10, 5), 1),  # October - 1 paid, 2 pending
+        (11, 2025, date(2025, 11, 5), 2),  # November - 2 paid, 1 pending
+        (12, 2025, date(2025, 12, 5), 0),  # December - all pending/overdue
+    ]
+
+    for month, year, due_date, num_paid in months_data:
+        print(f"\nCreating {date(year, month, 1).strftime('%B %Y')} payments...")
+        payment_num = 0
+
+        for assignment in active_assignments:
+            tenant = assignment.tenant
+
+            # Check if payment already exists
+            if Payment.objects.filter(
+                tenant=tenant,
+                payment_period_month=month,
+                payment_period_year=year
+            ).exists():
+                skipped_count += 1
+                print(f"[OK] {date(year, month, 1).strftime('%B')} payment already exists for {tenant.user.get_full_name()}")
+                continue
+
+            # Create payment
+            payment = Payment.objects.create(
+                tenant=tenant,
+                assignment=assignment,
+                payment_period_month=month,
+                payment_period_year=year,
+                amount=assignment.monthly_rent,
+                due_date=due_date,
+                status='pending'
+            )
+
+            # Mark as paid based on num_paid
+            if payment_num < num_paid:
+                payment.mark_as_paid(
+                    payment_date=due_date - timedelta(days=2),
+                    payment_method='transfer' if payment_num % 2 == 0 else 'cash',
+                    paid_by=admin
+                )
+                payment.payment_reference = f"TRF{payment.id:06d}"
+                payment.save()
+                status_str = "PAID"
+            else:
+                status_str = "PENDING"
+
+            payment_num += 1
+            created_count += 1
+            print(f"[OK] Created {date(year, month, 1).strftime('%B')} payment for {tenant.user.get_full_name()} - {status_str}")
+
+
+    print(f"\nCreated {created_count} new payments")
+    print(f"Skipped {skipped_count} existing payments")
+
+    # Payment statistics
+    print("\n=== Payment Statistics ===")
+    print(f"Total payments: {Payment.objects.count()}")
+    print(f"Paid: {Payment.objects.filter(status='paid').count()}")
+    print(f"Pending: {Payment.objects.filter(status='pending').count()}")
+    print(f"Cancelled: {Payment.objects.filter(status='cancelled').count()}")
+
+    # Calculate overdue
+    today = date.today()
+    overdue_count = Payment.objects.filter(status='pending', due_date__lt=today).count()
+    print(f"Overdue: {overdue_count}")
+
+
 if __name__ == '__main__':
     print("=" * 50)
     print("KOSAN APP - TEST DATA SETUP")
@@ -241,6 +338,7 @@ if __name__ == '__main__':
     create_test_users()
     create_test_rooms()
     create_tenant_assignments()
+    create_test_payments()
 
     print("\n" + "=" * 50)
     print("TEST DATA SETUP COMPLETE!")

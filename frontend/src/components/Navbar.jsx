@@ -43,7 +43,7 @@ const Navbar = () => {
         { path: '/dashboard', label: 'Dashboard' },
         { path: '/rooms', label: 'Kamar' },
         { path: '/penghuni', label: 'Penghuni' },
-        // Future: { path: '/payments', label: 'Pembayaran' },
+        { path: '/pembayaran', label: 'Pembayaran' },
         // Future: { path: '/complaints', label: 'Keluhan' },
       ]
     : [

@@ -1,21 +1,27 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getAllRooms } from '../api/roomApi';
 import { getAllTenants, getMyProfile } from '../api/tenantApi';
+import { getPaymentStats } from '../api/paymentApi';
 import Navbar from '../components/Navbar';
 import RoomCard from '../components/RoomCard';
+import PaymentStats from '../components/PaymentStats';
+import RevenueChart from '../components/RevenueChart';
 import { getFavorites } from '../utils/favoritesUtils';
 import { formatDate } from '../utils/formatters';
 
 function Dashboard() {
   const { user, isAdmin } = useAuth();
+  const navigate = useNavigate();
   const [roomCount, setRoomCount] = useState(0);
   const [tenantCount, setTenantCount] = useState(0);
+  const [paymentStats, setPaymentStats] = useState(null);
   const [myTenantProfile, setMyTenantProfile] = useState(null);
   const [favoriteRooms, setFavoriteRooms] = useState([]);
   const [loadingFavorites, setLoadingFavorites] = useState(false);
   const [loadingTenant, setLoadingTenant] = useState(false);
+  const [loadingPayments, setLoadingPayments] = useState(false);
 
   // Fetch counts on mount
   useEffect(() => {
@@ -36,6 +42,26 @@ function Dashboard() {
     };
 
     fetchCounts();
+  }, [isAdmin]);
+
+  // Fetch payment statistics (admin only)
+  useEffect(() => {
+    const fetchPaymentStats = async () => {
+      if (!isAdmin()) return;
+
+      setLoadingPayments(true);
+      try {
+        const currentYear = new Date().getFullYear();
+        const stats = await getPaymentStats({ year: currentYear });
+        setPaymentStats(stats);
+      } catch (err) {
+        console.error('Error fetching payment stats:', err);
+      } finally {
+        setLoadingPayments(false);
+      }
+    };
+
+    fetchPaymentStats();
   }, [isAdmin]);
 
   // Fetch tenant profile and favorites for regular users
@@ -120,7 +146,7 @@ function Dashboard() {
           </Link>
 
           {/* Card 2 - Total Penghuni (Admin only) */}
-          {isAdmin() ? (
+          {isAdmin() && (
             <Link
               to="/penghuni"
               className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200 cursor-pointer block"
@@ -153,7 +179,10 @@ function Dashboard() {
                 </svg>
               </p>
             </Link>
-          ) : (
+          )}
+
+          {/* Card 2 Alternate - Status (Tenant only) */}
+          {!isAdmin() && (
             <div className="bg-white rounded-lg shadow-lg p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -182,22 +211,58 @@ function Dashboard() {
             </div>
           )}
 
-          {/* Card 3 */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-sm">Pembayaran Pending</p>
-                <p className="text-3xl font-bold text-gray-800 mt-1">-</p>
+          {/* Card 3 - Total Pembayaran (Admin only) */}
+          {isAdmin() && (
+            <Link
+              to="/pembayaran"
+              className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200 cursor-pointer block"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-500 text-sm">Total Pembayaran</p>
+                  <p className="text-3xl font-bold text-gray-800 mt-1">
+                    {paymentStats?.total_payments || 0}
+                  </p>
+                </div>
+                <div className="bg-yellow-100 p-3 rounded-full">
+                  <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
               </div>
-              <div className="bg-yellow-100 p-3 rounded-full">
-                <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <p className="text-yellow-600 text-sm mt-2 flex items-center">
+                Lihat semua pembayaran
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
-              </div>
-            </div>
-            <p className="text-green-600 text-sm mt-2">Coming soon</p>
-          </div>
+              </p>
+            </Link>
+          )}
         </div>
+
+        {/* Payment Statistics - Admin Only */}
+        {isAdmin() && !loadingPayments && paymentStats && (
+          <div className="mb-6">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Statistik Pembayaran</h3>
+            <PaymentStats
+              stats={paymentStats}
+              onStatClick={(statId) => {
+                if (statId !== 'total') {
+                  navigate(`/pembayaran?status=${statId}`);
+                } else {
+                  navigate('/pembayaran');
+                }
+              }}
+            />
+          </div>
+        )}
+
+        {/* Revenue Chart - Admin Only */}
+        {isAdmin() && !loadingPayments && paymentStats?.monthly_revenue && (
+          <div className="mb-6">
+            <RevenueChart monthlyData={paymentStats.monthly_revenue} />
+          </div>
+        )}
 
         {/* Tenant Profile Section - Tenants Only */}
         {!isAdmin() && myTenantProfile && (
