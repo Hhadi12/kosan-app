@@ -4,10 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getAllRooms } from '../api/roomApi';
 import { getAllTenants, getMyProfile } from '../api/tenantApi';
 import { getPaymentStats } from '../api/paymentApi';
+import { getComplaintStats } from '../api/complaintApi';
 import Navbar from '../components/Navbar';
 import RoomCard from '../components/RoomCard';
 import PaymentStats from '../components/PaymentStats';
 import RevenueChart from '../components/RevenueChart';
+import ComplaintStats from '../components/ComplaintStats';
 import { getFavorites } from '../utils/favoritesUtils';
 import { formatDate } from '../utils/formatters';
 
@@ -17,6 +19,7 @@ function Dashboard() {
   const [roomCount, setRoomCount] = useState(0);
   const [tenantCount, setTenantCount] = useState(0);
   const [paymentStats, setPaymentStats] = useState(null);
+  const [complaintStats, setComplaintStats] = useState(null);
   const [myTenantProfile, setMyTenantProfile] = useState(null);
   const [favoriteRooms, setFavoriteRooms] = useState([]);
   const [loadingFavorites, setLoadingFavorites] = useState(false);
@@ -62,6 +65,22 @@ function Dashboard() {
     };
 
     fetchPaymentStats();
+  }, [isAdmin]);
+
+  // Fetch complaint statistics (admin only)
+  useEffect(() => {
+    const fetchComplaintStats = async () => {
+      if (!isAdmin()) return;
+
+      try {
+        const stats = await getComplaintStats();
+        setComplaintStats(stats);
+      } catch (err) {
+        console.error('Error fetching complaint stats:', err);
+      }
+    };
+
+    fetchComplaintStats();
   }, [isAdmin]);
 
   // Fetch tenant profile and favorites for regular users
@@ -261,6 +280,23 @@ function Dashboard() {
         {isAdmin() && !loadingPayments && paymentStats?.monthly_revenue && (
           <div className="mb-6">
             <RevenueChart monthlyData={paymentStats.monthly_revenue} />
+          </div>
+        )}
+
+        {/* Complaint Statistics - Admin Only */}
+        {isAdmin() && complaintStats && (
+          <div className="mb-6">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Statistik Keluhan</h3>
+            <ComplaintStats
+              stats={complaintStats}
+              onStatClick={(status) => {
+                if (status) {
+                  navigate(`/keluhan?status=${status}`);
+                } else {
+                  navigate('/keluhan');
+                }
+              }}
+            />
           </div>
         )}
 

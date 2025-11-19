@@ -602,3 +602,267 @@ export const BANK_ACCOUNT = {
   account_name: 'Rahman Hadi',
   account_number: '1234567890',
 };
+
+// ============================================================================
+// COMPLAINT MANAGEMENT CONSTANTS
+// ============================================================================
+
+/**
+ * Complaint Categories
+ */
+export const COMPLAINT_CATEGORIES = {
+  maintenance: {
+    value: 'maintenance',
+    label: 'Pemeliharaan/Perbaikan',
+    icon: '🔧',
+    color: 'blue',
+  },
+  facilities: {
+    value: 'facilities',
+    label: 'Fasilitas',
+    icon: '🏢',
+    color: 'green',
+  },
+  cleanliness: {
+    value: 'cleanliness',
+    label: 'Kebersihan',
+    icon: '🧹',
+    color: 'teal',
+  },
+  noise: {
+    value: 'noise',
+    label: 'Kebisingan',
+    icon: '🔊',
+    color: 'orange',
+  },
+  security: {
+    value: 'security',
+    label: 'Keamanan',
+    icon: '🔒',
+    color: 'red',
+  },
+  other: {
+    value: 'other',
+    label: 'Lainnya',
+    icon: '📝',
+    color: 'gray',
+  },
+};
+
+/**
+ * Complaint Category Options for Dropdowns
+ */
+export const COMPLAINT_CATEGORY_OPTIONS = [
+  { value: 'maintenance', label: 'Pemeliharaan/Perbaikan' },
+  { value: 'facilities', label: 'Fasilitas' },
+  { value: 'cleanliness', label: 'Kebersihan' },
+  { value: 'noise', label: 'Kebisingan' },
+  { value: 'security', label: 'Keamanan' },
+  { value: 'other', label: 'Lainnya' },
+];
+
+/**
+ * Complaint Status Configuration
+ */
+export const COMPLAINT_STATUS = {
+  open: {
+    value: 'open',
+    label: 'Baru',
+    color: 'blue',
+    bgColor: 'bg-blue-100',
+    textColor: 'text-blue-800',
+    borderColor: 'border-blue-200',
+  },
+  in_progress: {
+    value: 'in_progress',
+    label: 'Dalam Proses',
+    color: 'yellow',
+    bgColor: 'bg-yellow-100',
+    textColor: 'text-yellow-800',
+    borderColor: 'border-yellow-200',
+  },
+  resolved: {
+    value: 'resolved',
+    label: 'Selesai',
+    color: 'green',
+    bgColor: 'bg-green-100',
+    textColor: 'text-green-800',
+    borderColor: 'border-green-200',
+  },
+  closed: {
+    value: 'closed',
+    label: 'Ditutup',
+    color: 'gray',
+    bgColor: 'bg-gray-100',
+    textColor: 'text-gray-800',
+    borderColor: 'border-gray-200',
+  },
+};
+
+/**
+ * Complaint Status Options for Dropdowns
+ */
+export const COMPLAINT_STATUS_OPTIONS = [
+  { value: 'open', label: 'Baru' },
+  { value: 'in_progress', label: 'Dalam Proses' },
+  { value: 'resolved', label: 'Selesai' },
+  { value: 'closed', label: 'Ditutup' },
+];
+
+/**
+ * Complaint Priority Configuration
+ */
+export const COMPLAINT_PRIORITY = {
+  low: {
+    value: 'low',
+    label: 'Rendah',
+    color: 'gray',
+    bgColor: 'bg-gray-100',
+    textColor: 'text-gray-800',
+    borderColor: 'border-gray-200',
+  },
+  medium: {
+    value: 'medium',
+    label: 'Sedang',
+    color: 'blue',
+    bgColor: 'bg-blue-100',
+    textColor: 'text-blue-800',
+    borderColor: 'border-blue-200',
+  },
+  high: {
+    value: 'high',
+    label: 'Tinggi',
+    color: 'orange',
+    bgColor: 'bg-orange-100',
+    textColor: 'text-orange-800',
+    borderColor: 'border-orange-200',
+  },
+  urgent: {
+    value: 'urgent',
+    label: 'Mendesak',
+    color: 'red',
+    bgColor: 'bg-red-100',
+    textColor: 'text-red-800',
+    borderColor: 'border-red-200',
+  },
+};
+
+/**
+ * Complaint Priority Options for Dropdowns
+ */
+export const COMPLAINT_PRIORITY_OPTIONS = [
+  { value: 'low', label: 'Rendah' },
+  { value: 'medium', label: 'Sedang' },
+  { value: 'high', label: 'Tinggi' },
+  { value: 'urgent', label: 'Mendesak' },
+];
+
+/**
+ * Complaint Page Titles
+ */
+export const COMPLAINT_PAGE_TITLES = {
+  complaintList: 'Daftar Keluhan',
+  myComplaints: 'Keluhan Saya',
+  complaintDetail: 'Detail Keluhan',
+  createComplaint: 'Buat Keluhan Baru',
+};
+
+/**
+ * Complaint Form Labels
+ */
+export const COMPLAINT_FORM_LABELS = {
+  title: 'Judul Keluhan',
+  description: 'Deskripsi Keluhan',
+  category: 'Kategori',
+  priority: 'Prioritas',
+  status: 'Status',
+  room: 'Kamar (Opsional)',
+  attachment: 'Foto Bukti (Opsional)',
+  resolutionNotes: 'Catatan Penyelesaian',
+  comment: 'Komentar',
+};
+
+/**
+ * Complaint Button Labels
+ */
+export const COMPLAINT_BUTTON_LABELS = {
+  createComplaint: 'Buat Keluhan',
+  submitComplaint: 'Kirim Keluhan',
+  updateStatus: 'Perbarui Status',
+  addComment: 'Tambah Komentar',
+  resolve: 'Tandai Selesai',
+  close: 'Tutup Keluhan',
+  uploadPhoto: 'Unggah Foto',
+  viewDetail: 'Lihat Detail',
+  backToList: 'Kembali ke Daftar',
+  cancel: 'Batal',
+  delete: 'Hapus',
+  deleteComment: 'Hapus Komentar',
+};
+
+/**
+ * Complaint Success Messages
+ */
+export const COMPLAINT_SUCCESS_MESSAGES = {
+  complaintCreated: 'Keluhan berhasil dibuat',
+  complaintUpdated: 'Keluhan berhasil diperbarui',
+  complaintDeleted: 'Keluhan berhasil dihapus',
+  statusUpdated: 'Status keluhan berhasil diperbarui',
+  commentAdded: 'Komentar berhasil ditambahkan',
+  commentDeleted: 'Komentar berhasil dihapus',
+  complaintResolved: 'Keluhan berhasil ditandai sebagai selesai',
+};
+
+/**
+ * Complaint Error Messages
+ */
+export const COMPLAINT_ERROR_MESSAGES = {
+  fetchComplaints: 'Gagal memuat daftar keluhan',
+  fetchComplaintDetail: 'Gagal memuat detail keluhan',
+  createComplaint: 'Gagal membuat keluhan',
+  updateComplaint: 'Gagal memperbarui keluhan',
+  deleteComplaint: 'Gagal menghapus keluhan',
+  addComment: 'Gagal menambahkan komentar',
+  deleteComment: 'Gagal menghapus komentar',
+  uploadFile: 'Gagal mengunggah file',
+  fetchStats: 'Gagal memuat statistik keluhan',
+  titleTooShort: 'Judul harus minimal 5 karakter',
+  descriptionTooShort: 'Deskripsi harus minimal 10 karakter',
+  selectCategory: 'Pilih kategori keluhan',
+  commentEmpty: 'Komentar tidak boleh kosong',
+  fileTooLarge: 'Ukuran file maksimal 5MB',
+  invalidFileType: 'Hanya file JPG, JPEG, PNG yang diperbolehkan',
+  resolutionRequired: 'Catatan penyelesaian diperlukan',
+};
+
+/**
+ * Complaint Empty Messages
+ */
+export const COMPLAINT_EMPTY_MESSAGES = {
+  noComplaints: 'Belum ada keluhan',
+  noComplaintsFilter: 'Tidak ada keluhan yang sesuai dengan filter',
+  noComments: 'Belum ada komentar',
+  noResolutionNotes: 'Belum ada catatan penyelesaian',
+};
+
+/**
+ * Complaint Info Messages
+ */
+export const COMPLAINT_INFO_MESSAGES = {
+  createComplaintHint: 'Jelaskan keluhan Anda dengan detail agar dapat ditangani dengan baik',
+  attachmentHint: 'Unggah foto sebagai bukti (maksimal 5MB, format JPG/PNG)',
+  resolutionRequired: 'Catatan penyelesaian diperlukan saat menandai sebagai selesai',
+  deleteConfirm: 'Apakah Anda yakin ingin menghapus keluhan ini?',
+  deleteCommentConfirm: 'Apakah Anda yakin ingin menghapus komentar ini?',
+};
+
+/**
+ * Complaint Stats Labels (Indonesian)
+ */
+export const COMPLAINT_STATS_LABELS = {
+  totalComplaints: 'Total Keluhan',
+  openComplaints: 'Baru',
+  inProgressComplaints: 'Dalam Proses',
+  resolvedComplaints: 'Selesai',
+  closedComplaints: 'Ditutup',
+};

@@ -16,6 +16,9 @@ import EditTenant from './pages/EditTenant';
 import PaymentList from './pages/PaymentList';
 import PaymentDetail from './pages/PaymentDetail';
 import CreatePayment from './pages/CreatePayment';
+import ComplaintList from './pages/ComplaintList';
+import ComplaintDetail from './pages/ComplaintDetail';
+import CreateComplaint from './pages/CreateComplaint';
 
 function App() {
   return (
@@ -66,6 +69,12 @@ function App() {
         {/* IMPORTANT: /pembayaran/buat MUST come before /pembayaran/:id */}
         <Route path="/pembayaran/buat" element={<AdminRoute><CreatePayment /></AdminRoute>} />
         <Route path="/pembayaran/:id" element={<ProtectedRoute><PaymentDetail /></ProtectedRoute>} />
+
+        {/* Complaint Routes - Accessible by both Admin and Tenants */}
+        <Route path="/keluhan" element={<ProtectedRoute><ComplaintList /></ProtectedRoute>} />
+        {/* IMPORTANT: /keluhan/create MUST come before /keluhan/:id */}
+        <Route path="/keluhan/create" element={<ProtectedRoute><CreateComplaint /></ProtectedRoute>} />
+        <Route path="/keluhan/:id" element={<ProtectedRoute><ComplaintDetail /></ProtectedRoute>} />
 
         {/* Default Route */}
         <Route path="/" element={<Navigate to="/login" replace />} />

@@ -44,12 +44,12 @@ const Navbar = () => {
         { path: '/rooms', label: 'Kamar' },
         { path: '/penghuni', label: 'Penghuni' },
         { path: '/pembayaran', label: 'Pembayaran' },
-        // Future: { path: '/complaints', label: 'Keluhan' },
+        { path: '/keluhan', label: 'Keluhan' },
       ]
     : [
         { path: '/dashboard', label: 'Dashboard' },
         { path: '/rooms', label: 'Kamar' },
-        // Future: { path: '/favorites', label: 'Favorit Saya' },
+        { path: '/keluhan', label: 'Keluhan' },
       ];
 
   return (
