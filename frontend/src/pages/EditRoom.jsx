@@ -23,7 +23,7 @@ import {
  * Pre-fills form with current room data.
  */
 const EditRoom = () => {
-  const { id } = useParams();
+  const { roomNumber } = useParams();
   const navigate = useNavigate();
 
   // Form state
@@ -49,7 +49,7 @@ const EditRoom = () => {
       setError('');
 
       try {
-        const data = await getRoomById(id);
+        const data = await getRoomById(roomNumber);
         setFormData({
           room_number: data.room_number,
           room_type: data.room_type,
@@ -69,7 +69,7 @@ const EditRoom = () => {
     };
 
     fetchRoom();
-  }, [id]);
+  }, [roomNumber]);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -144,7 +144,7 @@ const EditRoom = () => {
     setError('');
 
     try {
-      const response = await updateRoom(id, {
+      const response = await updateRoom(roomNumber, {
         ...formData,
         room_number: formData.room_number.trim().toUpperCase(),
         price: parseFloat(formData.price),
@@ -153,7 +153,8 @@ const EditRoom = () => {
       });
 
       toast.success(SUCCESS_MESSAGES.roomUpdated);
-      navigate(`/rooms/${id}`);
+      // Navigate to the new room_number in case it was changed
+      navigate(`/rooms/${formData.room_number.trim().toUpperCase()}`);
     } catch (err) {
       console.error('Error updating room:', err);
       const errorMsg = err.response?.data?.error || err.response?.data?.message || ERROR_MESSAGES.updateRoom;
@@ -202,7 +203,7 @@ const EditRoom = () => {
       <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link
-            to={`/rooms/${id}`}
+            to={`/rooms/${roomNumber}`}
             className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -382,7 +383,7 @@ const EditRoom = () => {
           <div className="flex gap-4 pt-4">
             <button
               type="button"
-              onClick={() => navigate(`/rooms/${id}`)}
+              onClick={() => navigate(`/rooms/${roomNumber}`)}
               className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors duration-200"
               disabled={saving}
             >

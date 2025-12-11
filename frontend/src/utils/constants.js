@@ -866,3 +866,147 @@ export const COMPLAINT_STATS_LABELS = {
   resolvedComplaints: 'Selesai',
   closedComplaints: 'Ditutup',
 };
+
+// ============================================================================
+// PROFILE MANAGEMENT CONSTANTS
+// ============================================================================
+
+/**
+ * Profile Page Titles (Indonesian)
+ */
+export const PROFILE_PAGE_TITLES = {
+  myProfile: 'Profil Saya',
+  editProfile: 'Edit Profil',
+  changeEmail: 'Ubah Email',
+  changePassword: 'Ubah Password',
+};
+
+/**
+ * Profile Form Labels (Indonesian)
+ */
+export const PROFILE_FORM_LABELS = {
+  userId: 'ID Pengguna',
+  fullName: 'Nama Lengkap',
+  firstName: 'Nama Depan',
+  lastName: 'Nama Belakang',
+  email: 'Email',
+  phone: 'Nomor Telepon',
+  role: 'Role',
+  dateJoined: 'Tanggal Bergabung',
+  currentPassword: 'Password Saat Ini',
+  newPassword: 'Password Baru',
+  confirmPassword: 'Konfirmasi Password Baru',
+  newEmail: 'Email Baru',
+  passwordConfirm: 'Password (Konfirmasi)',
+};
+
+/**
+ * Profile Button Labels (Indonesian)
+ */
+export const PROFILE_BUTTON_LABELS = {
+  editProfile: 'Edit Profil',
+  changeEmail: 'Ubah Email',
+  changePassword: 'Ubah Password',
+  save: 'Simpan',
+  cancel: 'Batal',
+  close: 'Tutup',
+};
+
+/**
+ * Profile Success Messages (Indonesian)
+ */
+export const PROFILE_SUCCESS_MESSAGES = {
+  profileUpdated: 'Profil berhasil diperbarui',
+  emailChanged: 'Email berhasil diubah',
+  passwordChanged: 'Password berhasil diubah',
+};
+
+/**
+ * Profile Error Messages (Indonesian)
+ */
+export const PROFILE_ERROR_MESSAGES = {
+  fetchProfile: 'Gagal memuat profil',
+  updateProfile: 'Gagal memperbarui profil',
+  changeEmail: 'Gagal mengubah email',
+  changePassword: 'Gagal mengubah password',
+  wrongPassword: 'Password salah',
+  passwordMismatch: 'Password baru tidak cocok',
+  emailInUse: 'Email sudah digunakan',
+  passwordTooShort: 'Password minimal 8 karakter',
+  invalidPhone: 'Nomor telepon tidak valid',
+};
+
+/**
+ * Profile Loading Messages (Indonesian)
+ */
+export const PROFILE_LOADING_MESSAGES = {
+  loadingProfile: 'Memuat profil...',
+  savingProfile: 'Menyimpan profil...',
+  changingEmail: 'Mengubah email...',
+  changingPassword: 'Mengubah password...',
+};
+
+/**
+ * Profile Info Messages (Indonesian)
+ */
+export const PROFILE_INFO_MESSAGES = {
+  passwordMinLength: 'Password minimal 8 karakter',
+  emailConfirmRequired: 'Masukkan password untuk mengonfirmasi perubahan email',
+  cannotChangeRole: 'Role tidak dapat diubah',
+  tenantInfoLabel: 'Informasi Penghuni',
+  currentRoom: 'Kamar Saat Ini',
+  moveInDate: 'Tanggal Masuk',
+  status: 'Status',
+};
+
+/**
+ * Role Labels (Indonesian)
+ */
+export const ROLE_LABELS = {
+  admin: 'Admin',
+  user: 'Penghuni',
+};
+
+// =============================================================================
+// HISTORY CONSTANTS (Phase 8.4)
+// =============================================================================
+
+/**
+ * History Section Labels (Indonesian)
+ */
+export const HISTORY_LABELS = {
+  SECTION_TITLE: 'Riwayat 12 Bulan Terakhir',
+  PAYMENT_HISTORY: 'Riwayat Pembayaran',
+  COMPLAINT_HISTORY: 'Riwayat Keluhan',
+  ON_TIME: 'Tepat Waktu',
+  LATE: 'Terlambat',
+  UNPAID: 'Belum Bayar',
+  TOTAL_COMPLAINTS: 'Total Keluhan',
+  LAST_12_MONTHS: '(12 bulan)',
+  NO_PAYMENT_HISTORY: 'Tidak ada riwayat pembayaran.',
+  NO_COMPLAINT_HISTORY: 'Tidak ada riwayat keluhan.',
+  LOADING: 'Memuat riwayat...',
+  LOAD_ERROR: 'Tidak dapat memuat riwayat.',
+};
+
+/**
+ * History Status Colors
+ */
+export const HISTORY_STATUS_COLORS = {
+  on_time: {
+    text: 'text-green-600',
+    bg: 'bg-green-50',
+  },
+  late: {
+    text: 'text-yellow-600',
+    bg: 'bg-yellow-50',
+  },
+  unpaid: {
+    text: 'text-red-600',
+    bg: 'bg-red-50',
+  },
+  complaint: {
+    text: 'text-blue-600',
+    bg: 'bg-blue-50',
+  },
+};

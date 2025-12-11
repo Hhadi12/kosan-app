@@ -6,6 +6,7 @@ class Room(models.Model):
     Room model for managing boarding house rooms.
 
     Represents individual rooms with their details, pricing, and availability status.
+    Uses room_number as primary key (e.g., A101, B205).
     """
 
     # Room Type Choices
@@ -22,10 +23,10 @@ class Room(models.Model):
         ('maintenance', 'Maintenance'),
     ]
 
-    # Basic Information
+    # Primary Key - Room Number
     room_number = models.CharField(
         max_length=20,
-        unique=True,
+        primary_key=True,
         help_text="Unique room identifier (e.g., A101, B205)"
     )
 

@@ -26,7 +26,7 @@ import {
  * Admins can edit or delete the room from this page.
  */
 const RoomDetail = () => {
-  const { id } = useParams();
+  const { roomNumber } = useParams();
   const navigate = useNavigate();
   const { isAdmin } = useAuth();
 
@@ -45,7 +45,7 @@ const RoomDetail = () => {
     setError('');
 
     try {
-      const data = await getRoomById(id);
+      const data = await getRoomById(roomNumber);
       setRoom(data);
 
       // If room is occupied, fetch tenant info
@@ -64,7 +64,7 @@ const RoomDetail = () => {
   const fetchTenant = async () => {
     setLoadingTenant(true);
     try {
-      const data = await getTenantByRoom(id);
+      const data = await getTenantByRoom(roomNumber);
       setTenant(data.tenant || null);
     } catch (err) {
       console.error('Error fetching tenant:', err);
@@ -78,7 +78,7 @@ const RoomDetail = () => {
   // Fetch room when component mounts
   useEffect(() => {
     fetchRoom();
-  }, [id]);
+  }, [roomNumber]);
 
   // Handle ESC key to close modal
   useEffect(() => {
@@ -102,7 +102,7 @@ const RoomDetail = () => {
     setDeleting(true);
 
     try {
-      await deleteRoom(id);
+      await deleteRoom(roomNumber);
       toast.success(SUCCESS_MESSAGES.roomDeleted);
       navigate('/rooms');
     } catch (err) {
@@ -378,7 +378,7 @@ const RoomDetail = () => {
         {isAdmin() && (
           <div className="flex gap-4">
             <Link
-              to={`/rooms/${room.id}/edit`}
+              to={`/rooms/${room.room_number}/edit`}
               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg text-center transition-colors duration-200"
             >
               {BUTTON_LABELS.edit} Kamar

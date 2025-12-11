@@ -110,7 +110,7 @@ function Dashboard() {
       setLoadingFavorites(true);
       try {
         const data = await getAllRooms();
-        const favorites = data.rooms.filter((room) => favoriteIds.includes(room.id));
+        const favorites = data.rooms.filter((room) => favoriteIds.includes(room.room_number));
         setFavoriteRooms(favorites);
       } catch (err) {
         console.error('Error fetching favorite rooms:', err);
@@ -423,7 +423,7 @@ function Dashboard() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {favoriteRooms.map((room) => (
-                  <RoomCard key={room.id} room={room} />
+                  <RoomCard key={room.room_number} room={room} />
                 ))}
               </div>
             )}

@@ -35,7 +35,7 @@ export const getAllComplaints = async (filters = {}) => {
 
 /**
  * Get complaint detail by ID
- * @param {number} id - Complaint ID
+ * @param {string} id - Complaint ID (CPL-XXX format)
  * @returns {Promise} Complaint detail object
  */
 export const getComplaintById = async (id) => {
@@ -78,7 +78,7 @@ export const createComplaint = async (complaintData) => {
 
 /**
  * Update complaint (admin only)
- * @param {number} id - Complaint ID
+ * @param {string} id - Complaint ID (CPL-XXX format)
  * @param {Object} updateData - Fields to update (status, priority, resolution_notes)
  * @returns {Promise} Updated complaint object
  */
@@ -89,7 +89,7 @@ export const updateComplaint = async (id, updateData) => {
 
 /**
  * Delete complaint (admin only)
- * @param {number} id - Complaint ID
+ * @param {string} id - Complaint ID (CPL-XXX format)
  * @returns {Promise} void
  */
 export const deleteComplaint = async (id) => {
@@ -102,7 +102,7 @@ export const deleteComplaint = async (id) => {
 
 /**
  * Get all comments for a complaint
- * @param {number} complaintId - Complaint ID
+ * @param {string} complaintId - Complaint ID (CPL-XXX format)
  * @returns {Promise} Array of comments
  */
 export const getCommentsByComplaint = async (complaintId) => {
@@ -112,7 +112,7 @@ export const getCommentsByComplaint = async (complaintId) => {
 
 /**
  * Add comment to complaint
- * @param {number} complaintId - Complaint ID
+ * @param {string} complaintId - Complaint ID (CPL-XXX format)
  * @param {string} comment - Comment text
  * @returns {Promise} Created comment object
  */
@@ -125,7 +125,7 @@ export const addComment = async (complaintId, comment) => {
 
 /**
  * Delete comment (own comment or admin)
- * @param {number} commentId - Comment ID
+ * @param {string} commentId - Comment ID (CMT-XXX format)
  * @returns {Promise} void
  */
 export const deleteComment = async (commentId) => {

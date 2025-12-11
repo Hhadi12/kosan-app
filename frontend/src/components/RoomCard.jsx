@@ -27,13 +27,13 @@ const RoomCard = ({ room }) => {
 
   // Check favorite status on mount
   useEffect(() => {
-    setFavorited(isFavorite(room.id));
-  }, [room.id]);
+    setFavorited(isFavorite(room.room_number));
+  }, [room.room_number]);
 
   // Handle favorite toggle
   const handleFavoriteClick = (e) => {
     e.preventDefault(); // Prevent card click/navigation
-    const newStatus = toggleFavorite(room.id);
+    const newStatus = toggleFavorite(room.room_number);
     setFavorited(newStatus);
 
     if (newStatus) {
@@ -120,7 +120,7 @@ const RoomCard = ({ room }) => {
         <div className="flex gap-2">
           {/* View Detail Button - Always visible */}
           <Link
-            to={`/rooms/${room.id}`}
+            to={`/rooms/${room.room_number}`}
             className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-center"
           >
             {BUTTON_LABELS.view}
@@ -129,7 +129,7 @@ const RoomCard = ({ room }) => {
           {/* Edit Button - Admin only */}
           {isAdmin() && (
             <Link
-              to={`/rooms/${room.id}/edit`}
+              to={`/rooms/${room.room_number}/edit`}
               className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200"
             >
               {BUTTON_LABELS.edit}

@@ -19,6 +19,7 @@ import CreatePayment from './pages/CreatePayment';
 import ComplaintList from './pages/ComplaintList';
 import ComplaintDetail from './pages/ComplaintDetail';
 import CreateComplaint from './pages/CreateComplaint';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -52,12 +53,12 @@ function App() {
 
         {/* Room Routes - Protected */}
         <Route path="/rooms" element={<ProtectedRoute><RoomList /></ProtectedRoute>} />
-        <Route path="/rooms/:id" element={<ProtectedRoute><RoomDetail /></ProtectedRoute>} />
+        <Route path="/rooms/:roomNumber" element={<ProtectedRoute><RoomDetail /></ProtectedRoute>} />
 
         {/* Room Routes - Admin Only */}
-        {/* IMPORTANT: /rooms/create MUST come before /rooms/:id to avoid "create" being treated as an ID */}
+        {/* IMPORTANT: /rooms/create MUST come before /rooms/:roomNumber to avoid "create" being treated as a room number */}
         <Route path="/rooms/create" element={<AdminRoute><CreateRoom /></AdminRoute>} />
-        <Route path="/rooms/:id/edit" element={<AdminRoute><EditRoom /></AdminRoute>} />
+        <Route path="/rooms/:roomNumber/edit" element={<AdminRoute><EditRoom /></AdminRoute>} />
 
         {/* Tenant Routes - Admin Only */}
         <Route path="/penghuni" element={<AdminRoute><TenantList /></AdminRoute>} />
@@ -75,6 +76,9 @@ function App() {
         {/* IMPORTANT: /keluhan/create MUST come before /keluhan/:id */}
         <Route path="/keluhan/create" element={<ProtectedRoute><CreateComplaint /></ProtectedRoute>} />
         <Route path="/keluhan/:id" element={<ProtectedRoute><ComplaintDetail /></ProtectedRoute>} />
+
+        {/* Profile Route - Accessible by all authenticated users */}
+        <Route path="/profil" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
         {/* Default Route */}
         <Route path="/" element={<Navigate to="/login" replace />} />

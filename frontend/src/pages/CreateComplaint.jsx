@@ -280,7 +280,7 @@ const CreateComplaint = () => {
             >
               <option value="">Tidak terkait kamar spesifik</option>
               {rooms.map((room) => (
-                <option key={room.id} value={room.id}>
+                <option key={room.room_number} value={room.room_number}>
                   {room.room_number} - {room.room_type}
                 </option>
               ))}

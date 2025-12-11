@@ -21,7 +21,6 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            'id',
             'room_number',
             'room_type',
             'room_type_display',
@@ -35,7 +34,7 @@ class RoomSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
 
 
 class RoomCreateUpdateSerializer(serializers.ModelSerializer):
@@ -136,7 +135,6 @@ class RoomListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            'id',
             'room_number',
             'room_type',
             'room_type_display',

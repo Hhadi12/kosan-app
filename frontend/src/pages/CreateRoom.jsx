@@ -122,7 +122,7 @@ const CreateRoom = () => {
       });
 
       toast.success(SUCCESS_MESSAGES.roomCreated);
-      navigate(`/rooms/${response.room.id}`);
+      navigate(`/rooms/${response.room.room_number}`);
     } catch (err) {
       console.error('Error creating room:', err);
       const errorMsg = err.response?.data?.error || err.response?.data?.message || ERROR_MESSAGES.createRoom;

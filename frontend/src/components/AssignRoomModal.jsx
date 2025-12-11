@@ -58,11 +58,11 @@ const AssignRoomModal = ({ isOpen, onClose, tenant, onSuccess }) => {
 
   // Update monthly_rent when room is selected
   const handleRoomChange = (e) => {
-    const roomId = e.target.value;
-    setFormData((prev) => ({ ...prev, room: roomId }));
+    const roomNumber = e.target.value;
+    setFormData((prev) => ({ ...prev, room: roomNumber }));
 
-    if (roomId) {
-      const selectedRoom = availableRooms.find((r) => r.id === parseInt(roomId));
+    if (roomNumber) {
+      const selectedRoom = availableRooms.find((r) => r.room_number === roomNumber);
       if (selectedRoom) {
         setFormData((prev) => ({
           ...prev,
@@ -119,7 +119,7 @@ const AssignRoomModal = ({ isOpen, onClose, tenant, onSuccess }) => {
 
       // Prepare data for API
       const assignmentData = {
-        room: parseInt(formData.room),
+        room: formData.room,  // room_number is a string (e.g., "A101")
         move_in_date: formData.move_in_date,
         monthly_rent: parseFloat(formData.monthly_rent),
       };
@@ -251,7 +251,7 @@ const AssignRoomModal = ({ isOpen, onClose, tenant, onSuccess }) => {
                   >
                     <option value="">-- Pilih Kamar --</option>
                     {availableRooms.map((room) => (
-                      <option key={room.id} value={room.id}>
+                      <option key={room.room_number} value={room.room_number}>
                         {room.room_number} - {room.room_type} (Rp{' '}
                         {Number(room.price).toLocaleString('id-ID')}/bulan)
                       </option>

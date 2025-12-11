@@ -41,17 +41,17 @@ export const getAllRooms = async (filters = {}) => {
 };
 
 /**
- * Get a specific room by ID
+ * Get a specific room by room number
  *
- * @param {number} id - Room ID
+ * @param {string} roomNumber - Room number (e.g., "A101", "B201")
  * @returns {Promise} - Returns room object
  */
-export const getRoomById = async (id) => {
+export const getRoomById = async (roomNumber) => {
   try {
-    const response = await api.get(`/rooms/${id}/`);
+    const response = await api.get(`/rooms/${roomNumber}/`);
     return response.data;
   } catch (error) {
-    console.error(`Error fetching room ${id}:`, error);
+    console.error(`Error fetching room ${roomNumber}:`, error);
     throw error;
   }
 };
@@ -83,17 +83,17 @@ export const createRoom = async (roomData) => {
 /**
  * Update an existing room (Admin only)
  *
- * @param {number} id - Room ID
+ * @param {string} roomNumber - Room number (e.g., "A101", "B201")
  * @param {Object} roomData - Room data to update (partial update supported)
  * @returns {Promise} - Returns updated room object
  */
-export const updateRoom = async (id, roomData) => {
+export const updateRoom = async (roomNumber, roomData) => {
   try {
     // Use PATCH for partial updates
-    const response = await api.patch(`/rooms/${id}/update/`, roomData);
+    const response = await api.patch(`/rooms/${roomNumber}/update/`, roomData);
     return response.data;
   } catch (error) {
-    console.error(`Error updating room ${id}:`, error);
+    console.error(`Error updating room ${roomNumber}:`, error);
     throw error;
   }
 };
@@ -101,15 +101,15 @@ export const updateRoom = async (id, roomData) => {
 /**
  * Delete a room (Admin only)
  *
- * @param {number} id - Room ID
+ * @param {string} roomNumber - Room number (e.g., "A101", "B201")
  * @returns {Promise} - Returns success message
  */
-export const deleteRoom = async (id) => {
+export const deleteRoom = async (roomNumber) => {
   try {
-    const response = await api.delete(`/rooms/${id}/delete/`);
+    const response = await api.delete(`/rooms/${roomNumber}/delete/`);
     return response.data;
   } catch (error) {
-    console.error(`Error deleting room ${id}:`, error);
+    console.error(`Error deleting room ${roomNumber}:`, error);
     throw error;
   }
 };

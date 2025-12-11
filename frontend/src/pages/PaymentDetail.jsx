@@ -295,7 +295,7 @@ const PaymentDetail = () => {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Nomor Kamar:</span>
                   <Link
-                    to={`/kamar/${payment.room_info?.id}`}
+                    to={`/rooms/${payment.room_number}`}
                     className="font-medium text-blue-600 hover:text-blue-800"
                   >
                     {payment.room_number} →

@@ -20,6 +20,7 @@ class TenantProfileListSerializer(serializers.ModelSerializer):
     # Current assignment info
     current_room_number = serializers.SerializerMethodField()
     has_active_assignment = serializers.SerializerMethodField()
+    current_assignment = serializers.SerializerMethodField()
 
     class Meta:
         model = TenantProfile
@@ -33,6 +34,7 @@ class TenantProfileListSerializer(serializers.ModelSerializer):
             'is_active',
             'current_room_number',
             'has_active_assignment',
+            'current_assignment',
             'created_at',
         ]
 
@@ -44,6 +46,18 @@ class TenantProfileListSerializer(serializers.ModelSerializer):
     def get_has_active_assignment(self, obj):
         """Check if tenant has active room assignment"""
         return obj.has_active_assignment()
+
+    def get_current_assignment(self, obj):
+        """Get current assignment details for payment creation"""
+        assignment = obj.get_current_assignment()
+        if assignment:
+            return {
+                'id': assignment.id,
+                'room_number': assignment.room.room_number,
+                'monthly_rent': str(assignment.monthly_rent),
+                'move_in_date': assignment.move_in_date.isoformat() if assignment.move_in_date else None,
+            }
+        return None
 
 
 class RoomAssignmentSerializer(serializers.ModelSerializer):

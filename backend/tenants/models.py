@@ -4,6 +4,25 @@ from users.models import User
 from rooms.models import Room
 
 
+def generate_assignment_id():
+    """
+    Generate the next ASN-XXX ID for RoomAssignment.
+    """
+    from tenants.models import RoomAssignment
+    last_assignment = RoomAssignment.objects.order_by('-id').first()
+
+    if last_assignment and last_assignment.id.startswith('ASN-'):
+        try:
+            last_num = int(last_assignment.id.split('-')[1])
+            next_num = last_num + 1
+        except (ValueError, IndexError):
+            next_num = 1
+    else:
+        next_num = 1
+
+    return f"ASN-{next_num:03d}"
+
+
 class TenantProfile(models.Model):
     """
     Tenant Profile model extending User with additional tenant-specific information.
@@ -109,7 +128,17 @@ class RoomAssignment(models.Model):
 
     Links tenants to rooms with assignment dates and lease information.
     Maintains history of all assignments (past and current).
+    Uses custom ID format: ASN-XXX (e.g., ASN-001, ASN-002)
     """
+
+    # Custom primary key
+    id = models.CharField(
+        max_length=20,
+        primary_key=True,
+        default=generate_assignment_id,
+        editable=False,
+        help_text="Unique assignment identifier (ASN-XXX format)"
+    )
 
     # Relationships
     tenant = models.ForeignKey(

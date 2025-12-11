@@ -89,14 +89,14 @@ def create_room(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_room(request, pk):
+def get_room(request, room_number):
     """
     Get specific room details.
 
-    GET /api/rooms/{id}/
+    GET /api/rooms/{room_number}/
     """
     try:
-        room = Room.objects.get(pk=pk)
+        room = Room.objects.get(pk=room_number)
         serializer = RoomSerializer(room)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Room.DoesNotExist:
@@ -107,12 +107,12 @@ def get_room(request, pk):
 
 @api_view(['PUT', 'PATCH'])
 @permission_classes([IsAuthenticated])
-def update_room(request, pk):
+def update_room(request, room_number):
     """
     Update room information (admin only).
 
-    PUT /api/rooms/{id}/  - Full update
-    PATCH /api/rooms/{id}/ - Partial update
+    PUT /api/rooms/{room_number}/  - Full update
+    PATCH /api/rooms/{room_number}/ - Partial update
     """
     # Check if user is admin
     if not request.user.is_admin():
@@ -121,7 +121,7 @@ def update_room(request, pk):
         }, status=status.HTTP_403_FORBIDDEN)
 
     try:
-        room = Room.objects.get(pk=pk)
+        room = Room.objects.get(pk=room_number)
 
         # partial=True allows partial updates for PATCH
         partial = request.method == 'PATCH'
@@ -152,11 +152,11 @@ def update_room(request, pk):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def delete_room(request, pk):
+def delete_room(request, room_number):
     """
     Delete a room (admin only).
 
-    DELETE /api/rooms/{id}/
+    DELETE /api/rooms/{room_number}/
     """
     # Check if user is admin
     if not request.user.is_admin():
@@ -165,7 +165,7 @@ def delete_room(request, pk):
         }, status=status.HTTP_403_FORBIDDEN)
 
     try:
-        room = Room.objects.get(pk=pk)
+        room = Room.objects.get(pk=room_number)
 
         # Check if room is occupied before deletion
         if room.is_occupied():

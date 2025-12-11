@@ -30,7 +30,7 @@ export const getAllPayments = async (filters = {}) => {
   }
 };
 
-// 2. Get payment by ID
+// 2. Get payment by ID (PAY-XXX format)
 export const getPaymentById = async (id) => {
   try {
     const response = await api.get(`/payments/${id}/`);

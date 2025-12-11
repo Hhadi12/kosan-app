@@ -131,7 +131,7 @@ class PaymentAdmin(admin.ModelAdmin):
     def room_display(self, obj):
         """Display room number with link to room admin."""
         if obj.assignment and obj.assignment.room:
-            url = reverse('admin:rooms_room_change', args=[obj.assignment.room.id])
+            url = reverse('admin:rooms_room_change', args=[obj.assignment.room.room_number])
             return format_html('<a href="{}">{}</a>', url, obj.assignment.room.room_number)
         return '-'
     room_display.short_description = 'Room'

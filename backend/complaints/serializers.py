@@ -127,7 +127,6 @@ class ComplaintDetailSerializer(serializers.ModelSerializer):
         """Return room details if linked."""
         if obj.room:
             return {
-                'id': obj.room.id,
                 'room_number': obj.room.room_number,
                 'room_type': obj.room.get_room_type_display(),
                 'floor': obj.room.floor,

@@ -16,5 +16,5 @@ urlpatterns = [
     path('<int:pk>/change-room/', views.change_room, name='change_room'),
 
     # Utility Endpoints
-    path('by-room/<int:room_id>/', views.get_tenant_by_room, name='get_tenant_by_room'),
+    path('by-room/<str:room_id>/', views.get_tenant_by_room, name='get_tenant_by_room'),
 ]

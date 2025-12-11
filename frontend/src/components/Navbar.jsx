@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -12,12 +12,26 @@ import { useAuth } from '../contexts/AuthContext';
  * - Mobile responsive with hamburger menu
  * - Mobile menu slides from left
  * - Auto-closes on link click
+ * - User profile dropdown menu
  */
 const Navbar = () => {
   const { user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -86,22 +100,69 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Right Side: User Info & Logout */}
-          <div className="hidden md:flex items-center space-x-4">
-            <span className="text-gray-600">
-              {user?.username}
-              {isAdmin() && (
-                <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
-                  Admin
+          {/* Right Side: User Dropdown */}
+          <div className="hidden md:flex items-center" ref={dropdownRef}>
+            <div className="relative">
+              <button
+                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                {/* User Avatar */}
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium text-sm">
+                  {user?.first_name?.[0]?.toUpperCase() || user?.username?.[0]?.toUpperCase() || 'U'}
+                </div>
+                <span className="text-gray-700 font-medium">
+                  {user?.first_name || user?.username}
                 </span>
+                {isAdmin() && (
+                  <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+                    Admin
+                  </span>
+                )}
+                {/* Dropdown Arrow */}
+                <svg
+                  className={`w-4 h-4 text-gray-500 transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Dropdown Menu */}
+              {userDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 border border-gray-200 z-50">
+                  <Link
+                    to="/profil"
+                    onClick={() => setUserDropdownOpen(false)}
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      Profil Saya
+                    </div>
+                  </Link>
+                  <hr className="my-1 border-gray-200" />
+                  <button
+                    onClick={() => {
+                      setUserDropdownOpen(false);
+                      handleLogout();
+                    }}
+                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      Keluar
+                    </div>
+                  </button>
+                </div>
               )}
-            </span>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200 font-medium"
-            >
-              Keluar
-            </button>
+            </div>
           </div>
 
           {/* Mobile Hamburger Button */}
@@ -187,6 +248,19 @@ const Navbar = () => {
                   {item.label}
                 </Link>
               ))}
+
+              {/* Profile Link in Mobile Menu */}
+              <Link
+                to="/profil"
+                className={`block px-4 py-3 font-medium transition-colors duration-200 ${
+                  isActive('/profil')
+                    ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-600'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+                onClick={handleLinkClick}
+              >
+                Profil Saya
+              </Link>
             </div>
 
             {/* Logout Button */}

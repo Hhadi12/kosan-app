@@ -207,8 +207,8 @@ const CreatePayment = () => {
                   <option value="">Pilih Penghuni</option>
                   {tenants.map((tenant) => (
                     <option key={tenant.id} value={tenant.id}>
-                      {tenant.user.first_name} {tenant.user.last_name} - Kamar{' '}
-                      {tenant.current_assignment?.room_number || 'N/A'}
+                      {tenant.user_full_name || tenant.user_email} - Kamar{' '}
+                      {tenant.current_room_number || 'N/A'}
                     </option>
                   ))}
                 </select>

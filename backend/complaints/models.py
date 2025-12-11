@@ -6,9 +6,48 @@ from rooms.models import Room
 from users.models import User
 
 
+def generate_complaint_id():
+    """
+    Generate the next CPL-XXX ID for Complaint.
+    """
+    from complaints.models import Complaint
+    last_complaint = Complaint.objects.order_by('-id').first()
+
+    if last_complaint and last_complaint.id.startswith('CPL-'):
+        try:
+            last_num = int(last_complaint.id.split('-')[1])
+            next_num = last_num + 1
+        except (ValueError, IndexError):
+            next_num = 1
+    else:
+        next_num = 1
+
+    return f"CPL-{next_num:03d}"
+
+
+def generate_comment_id():
+    """
+    Generate the next CMT-XXX ID for ComplaintComment.
+    """
+    from complaints.models import ComplaintComment
+    last_comment = ComplaintComment.objects.order_by('-id').first()
+
+    if last_comment and last_comment.id.startswith('CMT-'):
+        try:
+            last_num = int(last_comment.id.split('-')[1])
+            next_num = last_num + 1
+        except (ValueError, IndexError):
+            next_num = 1
+    else:
+        next_num = 1
+
+    return f"CMT-{next_num:03d}"
+
+
 class Complaint(models.Model):
     """
     Complaint model for tracking tenant issues and complaints.
+    Uses custom ID format: CPL-XXX (e.g., CPL-001, CPL-002)
 
     Features:
     - Link to tenant who submitted complaint
@@ -21,6 +60,18 @@ class Complaint(models.Model):
     Status Workflow:
     - open (Baru) -> in_progress (Dalam Proses) -> resolved (Selesai) -> closed (Ditutup)
     """
+
+    # ============================================================
+    # CUSTOM PRIMARY KEY
+    # ============================================================
+
+    id = models.CharField(
+        max_length=20,
+        primary_key=True,
+        default=generate_complaint_id,
+        editable=False,
+        help_text="Unique complaint identifier (CPL-XXX format)"
+    )
 
     # ============================================================
     # RELATIONSHIPS
@@ -266,6 +317,7 @@ class Complaint(models.Model):
 class ComplaintComment(models.Model):
     """
     Comment model for complaint discussion thread.
+    Uses custom ID format: CMT-XXX (e.g., CMT-001, CMT-002)
 
     Features:
     - Link to parent complaint
@@ -277,6 +329,18 @@ class ComplaintComment(models.Model):
     - Any user can comment on complaints they have access to
     - Users can only delete their own comments
     """
+
+    # ============================================================
+    # CUSTOM PRIMARY KEY
+    # ============================================================
+
+    id = models.CharField(
+        max_length=20,
+        primary_key=True,
+        default=generate_comment_id,
+        editable=False,
+        help_text="Unique comment identifier (CMT-XXX format)"
+    )
 
     # ============================================================
     # RELATIONSHIPS

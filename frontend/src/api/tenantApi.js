@@ -124,11 +124,11 @@ export const deleteTenant = async (id) => {
  *
  * @param {number} tenantId - Tenant ID
  * @param {Object} assignmentData - Assignment details
- * @param {number} assignmentData.room - Room ID
+ * @param {string} assignmentData.room - Room number (e.g., "A101")
  * @param {string} assignmentData.move_in_date - Move-in date (YYYY-MM-DD)
  * @param {string} assignmentData.lease_end_date - Optional lease end date (YYYY-MM-DD)
  * @param {number} assignmentData.monthly_rent - Monthly rent amount
- * @returns {Promise} - Returns created assignment object
+ * @returns {Promise} - Returns created assignment object (with ASN-XXX id)
  */
 export const assignRoom = async (tenantId, assignmentData) => {
   try {
@@ -184,15 +184,15 @@ export const changeRoom = async (tenantId, changeData) => {
 /**
  * Get tenant currently assigned to a specific room
  *
- * @param {number} roomId - Room ID
+ * @param {string} roomNumber - Room number (e.g., "A101", "B201")
  * @returns {Promise} - Returns tenant object if room occupied, null if available
  */
-export const getTenantByRoom = async (roomId) => {
+export const getTenantByRoom = async (roomNumber) => {
   try {
-    const response = await api.get(`/tenants/by-room/${roomId}/`);
+    const response = await api.get(`/tenants/by-room/${roomNumber}/`);
     return response.data;
   } catch (error) {
-    console.error(`Error fetching tenant for room ${roomId}:`, error);
+    console.error(`Error fetching tenant for room ${roomNumber}:`, error);
     throw error;
   }
 };

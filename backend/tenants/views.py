@@ -389,7 +389,7 @@ def change_room(request, pk):
             }, status=status.HTTP_404_NOT_FOUND)
 
         # Check if trying to change to same room
-        if current_assignment.room.id == new_room.id:
+        if current_assignment.room.room_number == new_room.room_number:
             return Response({
                 'error': 'Tenant is already in this room'
             }, status=status.HTTP_400_BAD_REQUEST)
@@ -452,7 +452,6 @@ def get_tenant_by_room(request, room_id):
             return Response({
                 'message': f'Room {room.room_number} is currently unoccupied',
                 'room': {
-                    'id': room.id,
                     'room_number': room.room_number,
                     'status': room.status
                 },
@@ -468,7 +467,6 @@ def get_tenant_by_room(request, room_id):
 
         return Response({
             'room': {
-                'id': room.id,
                 'room_number': room.room_number,
                 'status': room.status
             },

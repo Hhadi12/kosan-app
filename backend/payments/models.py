@@ -7,12 +7,32 @@ from tenants.models import TenantProfile, RoomAssignment
 from users.models import User
 
 
+def generate_payment_id():
+    """
+    Generate the next PAY-XXX ID for Payment.
+    """
+    from payments.models import Payment
+    last_payment = Payment.objects.order_by('-id').first()
+
+    if last_payment and last_payment.id.startswith('PAY-'):
+        try:
+            last_num = int(last_payment.id.split('-')[1])
+            next_num = last_num + 1
+        except (ValueError, IndexError):
+            next_num = 1
+    else:
+        next_num = 1
+
+    return f"PAY-{next_num:03d}"
+
+
 class Payment(models.Model):
     """
     Payment model for tracking rent payments.
 
     Links tenants to their monthly rent payments with status tracking,
     proof of payment upload support, and complete audit trail.
+    Uses custom ID format: PAY-XXX (e.g., PAY-001, PAY-002)
 
     Features:
     - Monthly billing automation
@@ -21,6 +41,18 @@ class Payment(models.Model):
     - PDF receipt generation (Feature C)
     - Overdue detection
     """
+
+    # ============================================================
+    # CUSTOM PRIMARY KEY
+    # ============================================================
+
+    id = models.CharField(
+        max_length=20,
+        primary_key=True,
+        default=generate_payment_id,
+        editable=False,
+        help_text="Unique payment identifier (PAY-XXX format)"
+    )
 
     # ============================================================
     # RELATIONSHIPS
