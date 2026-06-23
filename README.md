@@ -2,7 +2,7 @@
 
 **Web-based boarding house (kosan) management system**
 
-Built with Django REST Framework + React as part of a final year thesis project researching LLM-assisted development.
+Built with Django REST Framework + React as part of a final year thesis project.
 
 ---
 
@@ -138,10 +138,6 @@ kosan-app/
 │   ├── package.json
 │   └── vite.config.js
 │
-├── .claude/               # Development context (git-ignored)
-│   ├── CLAUDE.md         # Project context for Claude Code
-│   ├── reference/        # Documentation and handoff docs
-│   └── skills/           # Development guides
 │
 └── README.md             # This file
 ```
@@ -221,8 +217,6 @@ After running `create_test_data.py`:
 - Email: `andi@test.com` | Password: `andi123`
 - Email: `dewi@test.com` | Password: `dewi123`
 
-See `.claude/reference/TEST_CREDENTIALS.md` for complete details.
-
 ---
 
 ## API Documentation
@@ -263,26 +257,11 @@ For complete API documentation, see `.claude/reference/API_QUICK_REFERENCE.md`
 
 ---
 
-## Testing
-
-### Backend Testing
-Manual API testing with Postman:
-- See `.claude/reference/TESTING_REPORT.md` for Phase 3 tests
-- 18/18 tests passing for room management
-
-### Frontend Testing
-Manual browser testing:
-- See `.claude/reference/TESTING_GUIDE.md` for quick test scenarios
-- See `.claude/reference/TESTING_CHECKLIST.md` for comprehensive tests (130+ test cases)
-
----
-
 ## Development Notes
 
 ### Language
 - **All user-facing content:** Bahasa Indonesia
 - **Code and documentation:** English
-- See `.claude/skills/INDONESIAN_LANGUAGE_GUIDE.md` for translations
 
 ### Authentication
 - **Important:** Backend uses EMAIL for login, not username
@@ -297,10 +276,7 @@ Manual browser testing:
 
 ## Documentation
 
-Comprehensive documentation available in `.claude/reference/`:
-
 **For Development:**
-- `CLAUDE.md` - Complete project context
 - `PHASE_X_HANDOFF.md` - Technical specifications per phase
 - `API_QUICK_REFERENCE.md` - API endpoint reference
 - `TESTING_GUIDE.md` - Testing procedures
@@ -311,50 +287,9 @@ Comprehensive documentation available in `.claude/reference/`:
 
 ---
 
-## Contributing
-
-This is a thesis research project. The development approach:
-1. Phase-based incremental development
-2. LLM-assisted implementation (Claude Code)
-3. Student acts as project manager
-4. Claude acts as developer/guide
-5. Comprehensive documentation for research
-
----
-
-## Research Context
-
-**Research Question:** Can individuals with minimal programming background build applications using LLM assistance?
-
-**Methodology:**
-- Step-by-step guided development
-- Explanatory coding (not just code generation)
-- Metrics tracking (time, code quality, independence)
-- Tool comparison (Chat vs Code)
-
-**Current Progress:**
-- 5 phases complete (Phases 1-4.5)
-- 3,500+ lines of production code
-- 6,000+ lines of documentation
-- 130+ test cases documented
-- Student independence: 80%+ (from 20%)
-
----
 
 ## License
 
 This project is developed for academic research purposes.
 
 ---
-
-## Acknowledgments
-
-- Built with Claude Code by Anthropic
-- Part of final year thesis research
-- Tech stack: Django REST Framework + React + Vite + Tailwind CSS
-
----
-
-**Last Updated:** November 9, 2025
-**Status:** Phase 4.5 Complete | Phase 5 Ready
-**Next:** Tenant Management System
